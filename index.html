@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#11121a">
+<title>МемЗавод — генератор мемов</title>
+<style>
+:root{--bg:#10111a;--panel:#191b28;--panel2:#222538;--text:#f5f6ff;--muted:#a5a9bf;--accent:#9b7bff;--accent2:#ff6ea8;--line:#303349}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 15% 0%,#292044 0,transparent 34%),radial-gradient(circle at 95% 20%,#3a203b 0,transparent 27%),var(--bg);color:var(--text);font:15px/1.45 Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+header{max-width:1200px;margin:auto;padding:26px 22px 16px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:15px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-size:25px;box-shadow:0 8px 30px #9b7bff44}.brand h1{font-size:22px;margin:0;letter-spacing:-.7px}.brand p{margin:2px 0 0;color:var(--muted);font-size:12px}.header-tag{color:#d9d1ff;border:1px solid #514675;background:#28213d;padding:8px 12px;border-radius:99px;font-size:12px}
+main{max-width:1200px;margin:0 auto;padding:10px 22px 42px}.intro{margin:8px 0 22px}.intro h2{font-size:clamp(25px,4vw,38px);letter-spacing:-1.2px;margin:0 0 7px}.intro p{color:var(--muted);margin:0}
+.layout{display:grid;grid-template-columns:minmax(300px,410px) minmax(0,1fr);gap:20px;align-items:start}.panel{background:linear-gradient(180deg,#1c1e2c,#171925);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 16px 50px #0003}.section-title{font-weight:750;margin:0 0 13px;font-size:15px;display:flex;align-items:center;gap:8px}.section-title span{color:#c9baff}
+.field{margin:0 0 15px}.field label{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:#d7d9e8;margin-bottom:7px}.hint{color:var(--muted);font-size:11px}input[type=text],textarea,select{width:100%;background:#11131e;border:1px solid #35394f;border-radius:11px;padding:11px 12px;color:var(--text);outline:none;font:inherit}textarea{resize:vertical;min-height:65px}input:focus,textarea:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px #9b7bff22}
+.upload{border:1px dashed #56506f;border-radius:13px;padding:13px;background:#171827;display:flex;align-items:center;gap:12px;cursor:pointer}.upload:hover{border-color:var(--accent);background:#201d32}.upload-icon{width:38px;height:38px;display:grid;place-items:center;background:#302746;border-radius:11px;font-size:19px}.upload strong{display:block;font-size:13px}.upload small{color:var(--muted);font-size:11px}input[type=file]{display:none}
+.templates{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.template{border:1px solid #36394e;border-radius:12px;background:#141622;color:var(--text);padding:8px 5px;cursor:pointer;text-align:center;min-height:73px}.template:hover,.template.active{border-color:var(--accent);background:#28213e}.template .emoji{font-size:23px;display:block;margin-bottom:3px}.template small{font-size:10px;color:#c4c6d8}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.color-row{display:flex;align-items:center;gap:10px;background:#11131e;border:1px solid #35394f;padding:7px 10px;border-radius:10px}.color-row input{width:28px;height:25px;padding:0;border:0;background:none}.toggle{display:flex;align-items:center;gap:8px;color:#d8daea;font-size:12px}.toggle input{accent-color:var(--accent)}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px}.btn{border:0;border-radius:12px;padding:12px 14px;font:700 13px inherit;cursor:pointer;transition:.15s}.btn:hover{transform:translateY(-1px);filter:brightness(1.08)}.primary{background:linear-gradient(135deg,#9b7bff,#7656e9);color:white;box-shadow:0 7px 20px #7656e944}.secondary{background:#2a2d40;color:#f3f3ff;border:1px solid #41455e}.wide{grid-column:1/-1}
+.preview-panel{position:sticky;top:16px}.preview-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}.preview-head h3{margin:0;font-size:15px}.live{font-size:11px;color:#a8f0c7;display:flex;align-items:center;gap:6px}.live:before{content:"";width:7px;height:7px;border-radius:50%;background:#57d68b;box-shadow:0 0 10px #57d68b}
+.canvas-wrap{background:repeating-conic-gradient(#252839 0% 25%,#202333 0% 50%) 50%/22px 22px;border-radius:15px;padding:14px;display:grid;place-items:center;min-height:340px;overflow:hidden}canvas{display:block;max-width:100%;height:auto;max-height:70vh;object-fit:contain;border-radius:4px;box-shadow:0 12px 35px #0007}.preview-note{color:var(--muted);font-size:11px;margin:12px 2px 0}.quick{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.chip{border:1px solid #3b3e55;background:#222538;color:#dfe0ef;border-radius:99px;padding:7px 10px;font-size:11px;cursor:pointer}.chip:hover{border-color:var(--accent);color:white}
+footer{max-width:1200px;margin:auto;padding:0 22px 28px;color:#777d96;font-size:11px;text-align:center}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);background:#292d40;border:1px solid #555b78;color:white;padding:11px 16px;border-radius:12px;opacity:0;pointer-events:none;transition:.2s;box-shadow:0 10px 30px #0007;z-index:5}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.preview-panel{position:static;grid-row:1}.canvas-wrap{min-height:240px}.canvas-wrap canvas{max-height:none;width:100%}header{padding-top:18px}.header-tag{display:none}}
+@media(max-width:430px){main{padding-left:13px;padding-right:13px}header{padding-left:13px;padding-right:13px}.panel{padding:14px;border-radius:16px}.templates{grid-template-columns:repeat(3,1fr)}}
+</style>
+
+<!-- Yandex Autoplacement 20440569 -->
+<script src="https://yandex.ru/ads/system/context.js" async></script>
+<script data-page-id="20440569" src="https://yandex.ru/ads/system/ap-loader.js" async></script>
+</head>
+<body>
+<header>
+  <div class="brand"><div class="logo">😂</div><div><h1>МемЗавод</h1><p>Твои мемы. Твои правила.</p></div></div>
+  <div class="header-tag">⚡ Бесплатный генератор мемов</div>
+</header>
+<main>
+  <div class="intro"><h2>Сделай мем за 10 секунд</h2><p>Загрузи фото, добавь текст — и отправляй друзьям или в соцсети.</p></div>
+  <div class="layout">
+    <section class="panel">
+      <h3 class="section-title"><span>01</span> Выбери основу</h3>
+      <div class="field">
+        <div class="templates" id="templates">
+          <button class="template active" data-template="classic"><span class="emoji">😂</span><small>Классика</small></button>
+          <button class="template" data-template="brain"><span class="emoji">🧠</span><small>Мозг</small></button>
+          <button class="template" data-template="expect"><span class="emoji">🤡</span><small>Ожидание</small></button>
+          <button class="template" data-template="success"><span class="emoji">😎</span><small>Успех</small></button>
+          <button class="template" data-template="cat"><span class="emoji">🐱</span><small>Кот</small></button>
+          <button class="template" data-template="blank"><span class="emoji">🖼️</span><small>Своё фото</small></button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Или загрузи своё изображение <span class="hint">JPG / PNG / WEBP</span></label>
+        <label class="upload" for="imageUpload"><span class="upload-icon">＋</span><span><strong>Выбрать изображение</strong><small id="fileName">Нажми, чтобы загрузить фото</small></span></label>
+        <input id="imageUpload" type="file" accept="image/*">
+      </div>
+      <h3 class="section-title"><span>02</span> Добавь текст</h3>
+      <div class="field"><label for="topText">Верхняя надпись</label><textarea id="topText" maxlength="110" placeholder="КОГДА СКАЗАЛ, ЧТО НАЧНЁШЬ С ПОНЕДЕЛЬНИКА">КОГДА СКАЗАЛ, ЧТО НАЧНЁШЬ С ПОНЕДЕЛЬНИКА</textarea></div>
+      <div class="field"><label for="bottomText">Нижняя надпись</label><textarea id="bottomText" maxlength="110" placeholder="НО ПОНЕДЕЛЬНИК УЖЕ НАСТУПИЛ">НО ПОНЕДЕЛЬНИК УЖЕ НАСТУПИЛ</textarea></div>
+      <div class="row">
+        <div class="field"><label for="fontSelect">Шрифт</label><select id="fontSelect"><option value="Impact">Impact — мемный</option><option value="Arial Black">Arial Black</option><option value="system-ui">Системный</option><option value="Georgia">Georgia</option></select></div>
+        <div class="field"><label for="fontSize">Размер текста</label><select id="fontSize"><option value="auto">Автоматический</option><option value="44">Маленький</option><option value="58">Средний</option><option value="72">Большой</option></select></div>
+      </div>
+      <div class="row">
+        <div class="field"><label>Цвет текста</label><div class="color-row"><input id="textColor" type="color" value="#ffffff"><span class="hint">Надпись</span></div></div>
+        <div class="field"><label>Обводка</label><div class="color-row"><input id="strokeColor" type="color" value="#000000"><span class="hint">Контур букв</span></div></div>
+      </div>
+      <div class="field"><label class="toggle"><input id="uppercase" type="checkbox" checked> Переводить текст в верхний регистр</label></div>
+      <div class="actions">
+        <button class="btn secondary" id="randomBtn">🎲 Случайная идея</button>
+        <button class="btn secondary" id="clearBtn">Очистить текст</button>
+        <button class="btn primary wide" id="downloadBtn">⬇ Скачать мем в PNG</button>
+      </div>
+    </section>
+    <section class="panel preview-panel">
+      <div class="preview-head"><h3>Предпросмотр</h3><span class="live">Обновляется сразу</span></div>
+      <div class="canvas-wrap"><canvas id="memeCanvas" width="1080" height="1080"></canvas></div>
+      <div class="quick">
+        <button class="chip" data-preset="Когда решил лечь пораньше|3:47 ночи, и ты всё ещё в телефоне">🌙 Про сон</button>
+        <button class="chip" data-preset="Я: сегодня без лишних трат|Также я через 5 минут: 🛍️">💸 Про деньги</button>
+        <button class="chip" data-preset="Мой мозг во время важного дела|А помнишь тот кринж в 2018?">🧠 Про мысли</button>
+        <button class="chip" data-preset="Когда препод говорит «это легко»|И показывает 48 формул">📚 Про учёбу</button>
+      </div>
+      <p class="preview-note">Картинка создаётся прямо в браузере. Загруженные фотографии никуда не отправляются.</p>
+    </section>
+  </div>
+</main>
+<footer>МемЗавод · Создавай, скачивай, делись хорошим настроением.</footer>
+<div class="toast" id="toast"></div>
+<script>
+(() => {
+ const canvas=document.getElementById('memeCanvas'),ctx=canvas.getContext('2d');
+ const $=id=>document.getElementById(id);
+ let uploadedImage=null, template='classic';
+ const ideas=[
+  ['Я: сегодня лягу до 23:00','Также я в 03:26:'],
+  ['КОГДА ОТКРЫЛ ХОЛОДИЛЬНИК','А ТАМ ВСЁ ТО ЖЕ САМОЕ'],
+  ['МОЯ МОТИВАЦИЯ В ПОНЕДЕЛЬНИК','МОЯ МОТИВАЦИЯ В ПЯТНИЦУ'],
+  ['КОГДА ПРИШЛА ЗАРПЛАТА','КОГДА ПРОШЛО ДВА ДНЯ'],
+  ['Я: МНЕ НУЖНО ЭКОНОМИТЬ','ТАКЖЕ Я: «ПОСЛЕДНЯЯ ПОКУПКА»']
+ ];
+ const presets={
+  classic:{bg:['#6d5ce7','#e45b9a'],emoji:'😂'},
+  brain:{bg:['#242b55','#7359c8'],emoji:'🧠'},
+  expect:{bg:['#8a4d73','#e28a57'],emoji:'🤡'},
+  success:{bg:['#183f45','#39a88b'],emoji:'😎'},
+  cat:{bg:['#5b4c77','#d49a79'],emoji:'🐱'},
+  blank:{bg:['#303447','#171a27'],emoji:'🖼️'}
+ };
+ function roundedRect(x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill()}
+ function drawBackground(){
+  const g=ctx.createLinearGradient(0,0,canvas.width,canvas.height);
+  const colors=presets[template].bg;g.addColorStop(0,colors[0]);g.addColorStop(1,colors[1]);ctx.fillStyle=g;ctx.fillRect(0,0,1080,1080);
+  ctx.save();ctx.globalAlpha=.12;for(let i=0;i<18;i++){ctx.fillStyle='#fff';ctx.beginPath();ctx.arc((i*197)%1080,(i*317)%1080,25+(i%4)*18,0,Math.PI*2);ctx.fill()}ctx.restore();
+ }
+ function drawPlaceholder(){
+  drawBackground();
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.font='250px "Apple Color Emoji","Segoe UI Emoji",sans-serif';ctx.fillText(presets[template].emoji,540,510);
+  ctx.fillStyle='#ffffffaa';ctx.font='bold 26px system-ui';ctx.fillText('ЗАГРУЗИ СВОЁ ФОТО ИЛИ ВЫБЕРИ ШАБЛОН',540,770);
+ }
+ function wrapLines(text,maxWidth,font){
+  const words=text.split(/\s+/).filter(Boolean),lines=[];let line='';
+  ctx.font=font;
+  for(const word of words){const test=line?line+' '+word:word;if(ctx.measureText(test).width>maxWidth&&line){lines.push(line);line=word}else line=test}
+  if(line)lines.push(line);return lines;
+ }
+ function drawTextBlock(raw,y,isBottom){
+  let text=raw.trim();if(!text)return;
+  if($('uppercase').checked)text=text.toLocaleUpperCase('ru-RU');
+  const family=$('fontSelect').value,requested=$('fontSize').value;
+  let size=requested==='auto'?Math.min(76,Math.max(38,850/Math.max(10,text.length)*2.4)):Number(requested);
+  let font=`900 ${size}px "${family}", Impact, sans-serif`,lines=wrapLines(text,960,font);
+  while(lines.length>3&&size>28){size-=3;font=`900 ${size}px "${family}", Impact, sans-serif`;lines=wrapLines(text,960,font)}
+  const lineH=size*1.12,total=lineH*lines.length;
+  let startY=isBottom?y-total+lineH:y;
+  ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineJoin='round';ctx.font=font;
+  lines.forEach((line,i)=>{const yy=startY+i*lineH;ctx.lineWidth=Math.max(5,size*.13);ctx.strokeStyle=$('strokeColor').value;ctx.fillStyle=$('textColor').value;ctx.strokeText(line,540,yy,970);ctx.fillText(line,540,yy,970)});
+  ctx.restore();
+ }
+ function render(){
+  ctx.clearRect(0,0,1080,1080);
+  if(uploadedImage){
+   const iw=uploadedImage.naturalWidth,ih=uploadedImage.naturalHeight,scale=Math.max(1080/iw,1080/ih),w=iw*scale,h=ih*scale;
+   ctx.save();ctx.filter='';ctx.drawImage(uploadedImage,(1080-w)/2,(1080-h)/2,w,h);ctx.restore();
+   const shade=ctx.createLinearGradient(0,0,0,1080);shade.addColorStop(0,'#0008');shade.addColorStop(.22,'#0000');shade.addColorStop(.75,'#0000');shade.addColorStop(1,'#0008');ctx.fillStyle=shade;ctx.fillRect(0,0,1080,1080);
+  }else drawPlaceholder();
+  drawTextBlock($('topText').value,105,false);
+  drawTextBlock($('bottomText').value,975,true);
+ }
+ function toast(message){const el=$('toast');el.textContent=message;el.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove('show'),2300)}
+ document.querySelectorAll('.template').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('.template').forEach(b=>b.classList.remove('active'));btn.classList.add('active');template=btn.dataset.template;uploadedImage=null;$('fileName').textContent='Нажми, чтобы загрузить фото';render();
+ }));
+ $('imageUpload').addEventListener('change',e=>{
+  const file=e.target.files&&e.target.files[0];if(!file)return;
+  if(!file.type.startsWith('image/')){toast('Выбери файл изображения');return}
+  const url=URL.createObjectURL(file),img=new Image();
+  img.onload=()=>{uploadedImage=img;$('fileName').textContent=file.name;template='blank';document.querySelectorAll('.template').forEach(b=>b.classList.toggle('active',b.dataset.template==='blank'));render();URL.revokeObjectURL(url)};
+  img.onerror=()=>{toast('Не удалось открыть изображение');URL.revokeObjectURL(url)};img.src=url;
+ });
+ ['topText','bottomText','fontSelect','fontSize','textColor','strokeColor','uppercase'].forEach(id=>$(id).addEventListener('input',render));
+ $('randomBtn').addEventListener('click',()=>{const p=ideas[Math.floor(Math.random()*ideas.length)];$('topText').value=p[0];$('bottomText').value=p[1];render();toast('Новая идея готова!')});
+ $('clearBtn').addEventListener('click',()=>{$('topText').value='';$('bottomText').value='';render()});
+ $('downloadBtn').addEventListener('click',()=>{
+  render();canvas.toBlob(blob=>{if(!blob){toast('Не удалось создать файл');return}const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='mem-zavod.png';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);toast('Мем скачан в PNG!')},'image/png');
+ });
+ document.querySelectorAll('[data-preset]').forEach(btn=>btn.addEventListener('click',()=>{const p=btn.dataset.preset.split('|');$('topText').value=p[0];$('bottomText').value=p[1];render()}));
+ render();
+})();
+</script>
+</body>
+</html>
